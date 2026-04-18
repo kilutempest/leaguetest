@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Royal Road Chapter Uploader</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0b1020;
+        color: #e7ecff;
+      }
+      .container {
+        max-width: 860px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #151c33;
+        border-radius: 10px;
+      }
+      label {
+        display: block;
+        margin-top: 1rem;
+      }
+      input[type='text'],
+      input[type='password'],
+      input[type='file'] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.6rem;
+        margin-top: 0.3rem;
+      }
+      .row {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 1rem;
+      }
+      button {
+        margin-top: 1rem;
+        padding: 0.8rem 1rem;
+        border: 0;
+        border-radius: 8px;
+        background: #4f87ff;
+        color: white;
+        cursor: pointer;
+      }
+      .status {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+      .ok { background: #1f472f; }
+      .bad { background: #5c1f2d; }
+      table {
+        width: 100%;
+        margin-top: 1rem;
+        border-collapse: collapse;
+      }
+      td, th {
+        border-bottom: 1px solid #2c355f;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      .small {
+        color: #aeb8de;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Royal Road Chapter Uploader</h1>
+      <p class="small">
+        Upload one or more HTML files. Files are uploaded in filename order.
+      </p>
+
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <label>Email
+          <input type="text" name="email" required />
+        </label>
+
+        <label>Password
+          <input type="password" name="password" required />
+        </label>
+
+        <label>Royal Road Fiction ID
+          <input type="text" name="fiction_id" required />
+        </label>
+
+        <label>Chapter HTML Files
+          <input type="file" name="chapter_files" accept=".html,text/html" multiple required />
+        </label>
+
+        <div class="row">
+          <label><input type="checkbox" name="publish_immediately" /> Publish immediately</label>
+          <label><input type="checkbox" name="dry_run" /> Dry run (no upload)</label>
+        </div>
+
+        <button type="submit">Upload Chapters</button>
+      </form>
+
+      {% if message %}
+      <div class="status {{ 'ok' if success else 'bad' }}">
+        {{ message }}
+      </div>
+      {% endif %}
+
+      {% if results %}
+      <table>
+        <thead>
+          <tr>
+            <th>Chapter</th>
+            <th>Status</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+            <tr>
+              <td>{{ result.title }}</td>
+              <td>{{ '✅' if result.success else '❌' }}</td>
+              <td>{{ result.detail }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+  </body>
+</html>
